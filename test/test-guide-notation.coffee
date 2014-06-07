@@ -9,4 +9,4 @@ describe 'Parse Commands', ->
     assert.strictEqual GN.parseCommandList("").length, 0
 
   it 'should parse guide commands', ->
-    assert.equal GN.parseCommandList("|")[0], "|"
+    assert GN.parseCommandList("|")[0].isGuide
