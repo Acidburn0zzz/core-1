@@ -19,65 +19,73 @@ describe 'Gaps', ->
 
 describe 'Units', ->
 
-  it 'should return null if given nothing', ->
-    assert.strictEqual Unit.from(""), null
-    assert.strictEqual Unit.from(), null
+  describe 'Object from string', ->
 
-  it 'should return a unit object when a unit pair is given', ->
-    assert.deepEqual Unit.from("1px"), {"string":"1px","value":1,"type":"px"}
+    it 'should return null if given nothing', ->
+      assert.strictEqual Unit.from(""), null
+      assert.strictEqual Unit.from(), null
 
-  it 'should return null when a bad value is given', ->
-    assert.strictEqual Unit.from("foo"), null
-    assert.strictEqual Unit.from("1foo"), null
+    it 'should return null when a bad value is given', ->
+      assert.strictEqual Unit.from("foo"), null
+      assert.strictEqual Unit.from("1foo"), null
 
-  it 'should return null when a bad value is given', ->
-    assert.deepEqual Unit.asBaseUnit("foo"), null
+    it 'should return null base if nothing is given', ->
+      assert.strictEqual Unit.from("1foo"), null
 
-  it 'should return an integer when one is given', ->
-    assert.deepEqual Unit.asBaseUnit(), null
-    assert.deepEqual Unit.asBaseUnit({}), null
-    assert.deepEqual Unit.asBaseUnit(""), null
+    it 'should return a unit object when a unit pair is given', ->
+      assert.deepEqual Unit.from("1px"), {"string":"1px","value":1,"type":"px"}
 
-  it 'should return an integer when given a unit object', ->
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1cm")), 28.346456692913385
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1in")), 72
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1mm")), 2.8346456692913384
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1px")), 1
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1pt")), 1
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1pica")), 12
+  describe 'Base value from unit object', ->
 
-  it 'should adjust for resolution when resolution is given', ->
-    assert.deepEqual Unit.asBaseUnit(Unit.from("1in"), 300), 300
+    it 'should return null when a bad value is given', ->
+      assert.deepEqual Unit.asBaseUnit("foo"), null
 
-  it 'should return null base if nothing is given', ->
-    assert.strictEqual Unit.from("1foo"), null
+    it 'should return an integer when one is given', ->
+      assert.deepEqual Unit.asBaseUnit(), null
+      assert.deepEqual Unit.asBaseUnit({}), null
+      assert.deepEqual Unit.asBaseUnit(""), null
 
-  it 'should not get the preferred name if nothing is given', ->
-    assert.equal Unit.preferredName(), null
-    assert.equal Unit.preferredName(""), null
+    it 'should return an integer when given a unit object', ->
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1cm")), 28.346456692913385
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1in")), 72
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1mm")), 2.8346456692913384
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1px")), 1
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1pt")), 1
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1pica")), 12
 
-  it 'should get preferred name for unit strings', ->
+    it 'should adjust for resolution when resolution is given', ->
+      assert.deepEqual Unit.asBaseUnit(Unit.from("1in"), 300), 300
 
-    assert.equal Unit.preferredName(), null
-    assert.equal Unit.preferredName(""), null
+  describe 'Preferred name', ->
 
-    for str in ['centimeter', 'centimeters', 'centimetre', 'centimetres', 'cm']
-      assert.equal Unit.preferredName(str), "cm"
+    it 'should not get the preferred name if nothing is given', ->
+      assert.equal Unit.preferredName(), null
+      assert.equal Unit.preferredName(""), null
 
-    for str in ['inch', 'inches', 'in']
-      assert.equal Unit.preferredName(str), "in"
+    it 'should get preferred name for unit strings', ->
 
-    for str in ['millimeter', 'millimeters', 'millimetre', 'millimetres', 'mm']
-      assert.equal Unit.preferredName(str), "mm"
+      assert.equal Unit.preferredName(), null
+      assert.equal Unit.preferredName(""), null
 
-    for str in ['pixel', 'pixels', 'px']
-      assert.equal Unit.preferredName(str), "px"
+      cm = ['centimeter', 'centimeters', 'centimetre', 'centimetres', 'cm']
+      for str in cm
+        assert.equal Unit.preferredName(str), "cm"
 
-    for str in ['point', 'points', 'pts', 'pt']
-      assert.equal Unit.preferredName(str), "points"
+      for str in ['inch', 'inches', 'in']
+        assert.equal Unit.preferredName(str), "in"
 
-    for str in ['pica', 'picas']
-      assert.equal Unit.preferredName(str), "picas"
+      mm = ['millimeter', 'millimeters', 'millimetre', 'millimetres', 'mm']
+      for str in mm
+        assert.equal Unit.preferredName(str), "mm"
 
-    for str in ['percent', 'pct', '%']
-      assert.equal Unit.preferredName(str), "%"
+      for str in ['pixel', 'pixels', 'px']
+        assert.equal Unit.preferredName(str), "px"
+
+      for str in ['point', 'points', 'pts', 'pt']
+        assert.equal Unit.preferredName(str), "points"
+
+      for str in ['pica', 'picas']
+        assert.equal Unit.preferredName(str), "picas"
+
+      for str in ['percent', 'pct', '%']
+        assert.equal Unit.preferredName(str), "%"
