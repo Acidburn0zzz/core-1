@@ -29,7 +29,9 @@ class Gap
     @variableRegexp.test string.replace /\s/g, ''
 
   isArbitrary: (string = "") =>
-    @arbitraryRegexp.test string.replace /\s/g, ''
+    return false if !@arbitraryRegexp.test string.replace /\s/g, ''
+    return false if new Unit().from(string) == null
+    true
 
   isWildcard: (string = "") =>
     @wildcardRegexp.test string.replace /\s/g, ''
@@ -37,6 +39,17 @@ class Gap
   isPercent: (string = "") ->
     unit = (new Unit).from(string.replace /\s/g, '')
     unit? and unit.type == '%'
+
+  parse: (string = "") ->
+    string = string.replace /\s/g, ''
+    if @isVariable string
+      string
+    else if @isArbitrary string
+      string
+    else if @isWildcard string
+      string
+    else
+      null
 
 #
 # Unit is a utility for parsing and validating unit strings

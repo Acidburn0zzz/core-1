@@ -8,7 +8,9 @@ Gap = GuideNotation.gap
 
 
 describe 'GuideNotation', ->
+
   describe 'Parse Commands', ->
+
     it 'should return an empty array when no commands are given', ->
       assert.strictEqual GN.parseCommandList().length, 0
       assert.strictEqual GN.parseCommandList("").length, 0
@@ -19,9 +21,10 @@ describe 'GuideNotation', ->
 describe 'Gaps', ->
 
   describe 'Evalutations', ->
+
     it 'should succeed for variables', ->
-      assert.strictEqual Gap.isVariable("$A"), true
-      assert.strictEqual Gap.isVariable("$A = | 10px |"), true
+      assert.strictEqual Gap.isVariable("$"), true
+      assert.strictEqual Gap.isVariable("$ = | 10px |"), true
       assert.strictEqual Gap.isVariable("$foo = | 10px |"), true
 
     it 'should fail for non-variables', ->
@@ -42,7 +45,8 @@ describe 'Gaps', ->
     it 'should fail for non-arbitrary gaps', ->
       assert.strictEqual Gap.isArbitrary(""), false
       assert.strictEqual Gap.isArbitrary("1"), false
-      assert.strictEqual Gap.isArbitrary("$A"), false
+      assert.strictEqual Gap.isArbitrary("foo"), false
+      assert.strictEqual Gap.isArbitrary("$"), false
       assert.strictEqual Gap.isArbitrary("$A = | 10px |"), false
 
     it 'should succeed for wildcards', ->
@@ -64,7 +68,20 @@ describe 'Gaps', ->
       assert.strictEqual Gap.isPercent(""), false
       assert.strictEqual Gap.isPercent("1px"), false
       assert.strictEqual Gap.isPercent("foo"), false
-      assert.strictEqual Gap.isPercent("$A"), false
+      assert.strictEqual Gap.isPercent("$"), false
+
+  describe 'Function', ->
+
+    it 'should reject parsing bad values', ->
+      assert.strictEqual Gap.parse(""), null
+      assert.strictEqual Gap.parse("foo"), null
+      assert.strictEqual Gap.parse("1foo"), null
+
+    it 'should succeed parsing good values', ->
+      assert.strictEqual Gap.parse("1px"), "1px"
+      assert.strictEqual Gap.parse("$"), "$"
+      assert.strictEqual Gap.parse("~"), "~"
+
 
 describe 'Units', ->
 
@@ -143,6 +160,7 @@ describe 'Units', ->
         assert.equal Unit.preferredName(str), "%"
 
   describe 'To string', ->
+
     it 'should return null when given nothing', ->
       assert.strictEqual Unit.toString(), null
       assert.strictEqual Unit.toString(""), null
