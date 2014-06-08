@@ -63,8 +63,8 @@ class Unit
         null
 
   # Convert the given value of type to the base unit of the application.
-  # This accounts for reslution, but the resolution must be set if it changes.
-  # The result is either pixels or points.
+  # This accounts for reslution, but the resolution must be manually changed.
+  # The result is pixels/points.
   #
   #   unit       - unit object
   #   resolution - dots per inch
