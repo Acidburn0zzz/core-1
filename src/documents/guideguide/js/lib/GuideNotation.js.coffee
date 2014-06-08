@@ -87,6 +87,11 @@ class Unit
     # convert to base units
     unit.value * resolution
 
+  toString: (unit = "") =>
+    return null if unit == ""
+    return @toString(@from(unit)) if typeof unit == "string"
+
+    "#{ unit.value }#{ unit.type }"
 
 if (typeof module != 'undefined' && typeof module.exports != 'undefined')
   module.exports =

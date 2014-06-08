@@ -35,6 +35,9 @@ describe 'Units', ->
     it 'should return a unit object when a unit pair is given', ->
       assert.deepEqual Unit.from("1px"), {"string":"1px","value":1,"type":"px"}
 
+    it 'should should allow spaces', ->
+      assert.deepEqual Unit.from("1 px"), {"string":"1px","value":1,"type":"px"}
+
   describe 'Base value from unit object', ->
 
     it 'should return null when a bad value is given', ->
@@ -89,3 +92,14 @@ describe 'Units', ->
 
       for str in ['percent', 'pct', '%']
         assert.equal Unit.preferredName(str), "%"
+
+  describe 'To string', ->
+    it 'should return null when given nothing', ->
+      assert.strictEqual Unit.toString(), null
+      assert.strictEqual Unit.toString(""), null
+
+    it 'should return string when given a unit object', ->
+      assert.equal Unit.toString(Unit.from("1px")), "1px"
+
+    it 'should return string when given a string', ->
+      assert.equal Unit.toString("1px"), "1px"
