@@ -70,6 +70,15 @@ describe 'Gaps', ->
       assert.strictEqual Gap.isPercent("foo"), false
       assert.strictEqual Gap.isPercent("$"), false
 
+    it 'should succeed for fills', ->
+      assert.strictEqual Gap.isFill("~*"), true
+      assert.strictEqual Gap.isFill("$*"), true
+      assert.strictEqual Gap.isFill("1px*"), true
+
+    it 'should fail for non-fills', ->
+      assert.strictEqual Gap.isFill("foo"), false
+      assert.strictEqual Gap.isFill("10px*2"), false
+
   describe 'Function', ->
 
     it 'should reject parsing bad values', ->

@@ -40,6 +40,19 @@ class Gap
     unit = (new Unit).from(string.replace /\s/g, '')
     unit? and unit.type == '%'
 
+  isFill: (string = "") ->
+    if @isVariable string
+      bits = @variableRegexp.exec string
+      return bits[2] && !bits[3]
+    else if @isArbitrary string
+      bits = @arbitraryRegexp.exec string
+      return bits[3] && !bits[4]
+    else if @isWildcard string
+      bits = @wildcardRegexp.exec string
+      return bits[1] && !bits[2] || false
+    else
+      false
+
   parse: (string = "") ->
     string = string.replace /\s/g, ''
     if @isVariable string
