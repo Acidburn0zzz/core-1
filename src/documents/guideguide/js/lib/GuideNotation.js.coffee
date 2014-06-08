@@ -62,6 +62,32 @@ class Unit
       else
         null
 
+  # Convert the given value of type to the base unit of the application.
+  # This accounts for reslution, but the resolution must be set if it changes.
+  # The result is either pixels or points.
+  #
+  #   unit       - unit object
+  #   resolution - dots per inch
+  #
+  # Returns a number
+  asBaseUnit: (unit, resolution = 72) ->
+    return null unless unit? and unit.value? and unit.type?
+
+    # convert to inches
+    switch unit.type
+      when 'cm'     then unit.value = unit.value / 2.54
+      when 'in'     then unit.value = unit.value / 1
+      when 'mm'     then unit.value = unit.value / 25.4
+      when 'px'     then unit.value = unit.value / resolution
+      when 'points' then unit.value = unit.value / resolution
+      when 'picas'  then unit.value = unit.value / 6
+      else
+        return null
+
+    # convert to base units
+    unit.value * resolution
+
+
 if (typeof module != 'undefined' && typeof module.exports != 'undefined')
   module.exports =
     notation: new GuideNotation()

@@ -19,7 +19,7 @@ describe 'Gaps', ->
 
 describe 'Units', ->
 
-  it 'should returns null if given nothing', ->
+  it 'should return null if given nothing', ->
     assert.strictEqual Unit.from(""), null
     assert.strictEqual Unit.from(), null
 
@@ -30,8 +30,27 @@ describe 'Units', ->
     assert.strictEqual Unit.from("foo"), null
     assert.strictEqual Unit.from("1foo"), null
 
+  it 'should return null when a bad value is given', ->
+    assert.deepEqual Unit.asBaseUnit("foo"), null
+
   it 'should return an integer when one is given', ->
-    assert.deepEqual Unit.from("1"), 1
+    assert.deepEqual Unit.asBaseUnit(), null
+    assert.deepEqual Unit.asBaseUnit({}), null
+    assert.deepEqual Unit.asBaseUnit(""), null
+
+  it 'should return an integer when given a unit object', ->
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1cm")), 28.346456692913385
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1in")), 72
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1mm")), 2.8346456692913384
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1px")), 1
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1pt")), 1
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1pica")), 12
+
+  it 'should adjust for resolution when resolution is given', ->
+    assert.deepEqual Unit.asBaseUnit(Unit.from("1in"), 300), 300
+
+  it 'should return null base if nothing is given', ->
+    assert.strictEqual Unit.from("1foo"), null
 
   it 'should not get the preferred name if nothing is given', ->
     assert.equal Unit.preferredName(), null
