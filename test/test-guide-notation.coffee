@@ -4,6 +4,7 @@ GuideNotation = require "
 "
 GN = GuideNotation.notation
 Unit = GuideNotation.unit
+Gap = GuideNotation.gap
 
 
 describe 'GuideNotation', ->
@@ -16,6 +17,54 @@ describe 'GuideNotation', ->
       assert GN.parseCommandList("|")[0].isGuide
 
 describe 'Gaps', ->
+
+  describe 'Evalutations', ->
+    it 'should succeed for variables', ->
+      assert.strictEqual Gap.isVariable("$A"), true
+      assert.strictEqual Gap.isVariable("$A = | 10px |"), true
+      assert.strictEqual Gap.isVariable("$foo = | 10px |"), true
+
+    it 'should fail for non-variables', ->
+      assert.strictEqual Gap.isVariable(""), false
+      assert.strictEqual Gap.isVariable("foo"), false
+      assert.strictEqual Gap.isVariable("1"), false
+      assert.strictEqual Gap.isVariable("1px"), false
+
+    it 'should succeed for arbitrary gaps', ->
+      assert.strictEqual Gap.isArbitrary("1cm"), true
+      assert.strictEqual Gap.isArbitrary("1in"), true
+      assert.strictEqual Gap.isArbitrary("1mm"), true
+      assert.strictEqual Gap.isArbitrary("1px"), true
+      assert.strictEqual Gap.isArbitrary("1pt"), true
+      assert.strictEqual Gap.isArbitrary("1pica"), true
+      assert.strictEqual Gap.isArbitrary("1%"), true
+
+    it 'should fail for non-arbitrary gaps', ->
+      assert.strictEqual Gap.isArbitrary(""), false
+      assert.strictEqual Gap.isArbitrary("1"), false
+      assert.strictEqual Gap.isArbitrary("$A"), false
+      assert.strictEqual Gap.isArbitrary("$A = | 10px |"), false
+
+    it 'should succeed for wildcards', ->
+      assert.strictEqual Gap.isWildcard("~"), true
+
+    it 'should fail for non-wildcards', ->
+      assert.strictEqual Gap.isWildcard("~10px"), false
+      assert.strictEqual Gap.isWildcard(""), false
+      assert.strictEqual Gap.isWildcard("1px"), false
+      assert.strictEqual Gap.isWildcard("foo"), false
+      assert.strictEqual Gap.isWildcard("$A"), false
+
+    it 'should succeed for percents', ->
+      assert.strictEqual Gap.isPercent("10%"), true
+
+    it 'should fail for non-percents', ->
+      assert.strictEqual Gap.isPercent("%"), false
+      assert.strictEqual Gap.isPercent("~10px"), false
+      assert.strictEqual Gap.isPercent(""), false
+      assert.strictEqual Gap.isPercent("1px"), false
+      assert.strictEqual Gap.isPercent("foo"), false
+      assert.strictEqual Gap.isPercent("$A"), false
 
 describe 'Units', ->
 

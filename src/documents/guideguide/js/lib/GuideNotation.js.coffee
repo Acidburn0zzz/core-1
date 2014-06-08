@@ -16,12 +16,40 @@ class GuideNotation
     commands
 
 #
+# A gap command tells the guide parser to move ahead by the specified distance.
+#
+class Gap
+  variableRegexp: /^\$([^\*]+)?(\*(\d+)?)?$/i
+  arbitraryRegexp: /^(([-0-9\.]+)?[a-z%]+)(\*(\d+)?)?$/i
+  wildcardRegexp: /^~(\*(\d*))?$/i
+
+  constructor: (args = {}) ->
+
+  isVariable: (string = "") =>
+    @variableRegexp.test string.replace /\s/g, ''
+
+  isArbitrary: (string = "") =>
+    @arbitraryRegexp.test string.replace /\s/g, ''
+
+  isWildcard: (string = "") =>
+    @wildcardRegexp.test string.replace /\s/g, ''
+
+  isPercent: (string = "") ->
+    unit = (new Unit).from(string.replace /\s/g, '')
+    unit? and unit.type == '%'
+
+#
 # Unit is a utility for parsing and validating unit strings
 #
 class Unit
 
   constructor: (args = {}) ->
 
+  # Parse a string and change it to a unit object
+  #
+  #   string - unit string to be parsed
+  #
+  # Returns an object or null if invalid
   from: (string = "") =>
     string = string.replace /\s/g, ''
     bits = string.match(/([-0-9\.]+)([a-z%]+)?/i)
@@ -87,6 +115,12 @@ class Unit
     # convert to base units
     unit.value * resolution
 
+  # Convert a unit object to a string or format a unit string to conform to the
+  # unit string standard
+  #
+  #   unit = string or object
+  #
+  # Returns a string
   toString: (unit = "") =>
     return null if unit == ""
     return @toString(@from(unit)) if typeof unit == "string"
@@ -97,6 +131,8 @@ if (typeof module != 'undefined' && typeof module.exports != 'undefined')
   module.exports =
     notation: new GuideNotation()
     unit: new Unit()
+    gap: new Gap()
 else
   window.GuideNotation = new GuideNotation()
   window.Unit = new Unit()
+  window.Gap = new Gap()
