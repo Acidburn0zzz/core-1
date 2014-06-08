@@ -89,7 +89,18 @@ describe 'Gaps', ->
     it 'should succeed parsing good values', ->
       assert.strictEqual Gap.parse("1px"), "1px"
       assert.strictEqual Gap.parse("$"), "$"
-      assert.strictEqual Gap.parse("~"), "~"
+
+    it 'should parse wildcards', ->
+      assert.deepEqual Gap.parse("~").isWildcard, true
+      assert.deepEqual Gap.parse("~*").isWildcard, true
+      assert.deepEqual Gap.parse("~*2").isWildcard, true
+
+  describe 'utility', ->
+
+    it 'should count wildcard multiples', ->
+      assert.equal Gap.getWildcardMultiples("~"), 1
+      assert.equal Gap.getWildcardMultiples("~*"), 1
+      assert.equal Gap.getWildcardMultiples("~*2"), 2
 
 
 describe 'Units', ->

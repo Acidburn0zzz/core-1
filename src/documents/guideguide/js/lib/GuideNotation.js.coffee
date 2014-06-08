@@ -25,21 +25,47 @@ class Gap
 
   constructor: (args = {}) ->
 
+  # Test if a string is a variable
+  #
+  #   string - gap string to test
+  #
+  # Returns a Boolean
   isVariable: (string = "") =>
     @variableRegexp.test string.replace /\s/g, ''
 
+  # Test if a gap is an arbitray gap (unit pair)
+  #
+  #   string - gap string to test
+  #
+  # Returns a Boolean
   isArbitrary: (string = "") =>
     return false if !@arbitraryRegexp.test string.replace /\s/g, ''
     return false if new Unit().from(string) == null
     true
 
+  # Test if a gap is a wildcard
+  #
+  #   string - gap string to test
+  #
+  # Returns a Boolean
   isWildcard: (string = "") =>
     @wildcardRegexp.test string.replace /\s/g, ''
 
+  # Test if a gap is a percent
+  #
+  #   string - gap string to test
+  #
+  # Returns a Boolean
   isPercent: (string = "") ->
     unit = (new Unit).from(string.replace /\s/g, '')
     unit? and unit.type == '%'
 
+  # Test if a gap does not have a multiple defined, and therefor should be
+  # repeated to fill the given area
+  #
+  #   string - gap string to test
+  #
+  # Returns a Boolean
   isFill: (string = "") ->
     if @isVariable string
       bits = @variableRegexp.exec string
@@ -53,6 +79,11 @@ class Gap
     else
       false
 
+  # Parse a gap string and return a relevant object
+  #
+  #   string - gap string to test
+  #
+  # Returns an Object or null if invalid
   parse: (string = "") ->
     string = string.replace /\s/g, ''
     if @isVariable string
@@ -60,9 +91,18 @@ class Gap
     else if @isArbitrary string
       string
     else if @isWildcard string
-      string
+      isWildcard: true
+      multiplier: @getWildcardMultiples string
     else
       null
+
+  # Parse a wildcard string and return the number of multiples
+  #
+  #   string - wildcard string to parse
+  #
+  # Returns an integer
+  getWildcardMultiples: (string = "") ->
+    parseInt(@wildcardRegexp.exec(string)[2]) || 1
 
 #
 # Unit is a utility for parsing and validating unit strings
