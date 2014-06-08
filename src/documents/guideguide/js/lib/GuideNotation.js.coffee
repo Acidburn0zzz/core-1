@@ -22,6 +22,22 @@ class Unit
 
   constructor: (args = {}) ->
 
+  from: (string = "") =>
+    string = string.replace /\s/g, ''
+    bits = string.match(/([-0-9\.]+)([a-z%]+)?/i)
+    return null if !string or string == "" or !bits?
+    return null if bits[2] and !@preferredName(bits[2])
+
+    # Integer
+    if bits[1] and !bits[2]
+      value = parseFloat bits[1]
+      return if value.toString() == bits[1] then value else null
+
+    # Unit pair
+    string: string
+    value: parseFloat bits[1]
+    type: @preferredName bits[2]
+
   # Parse a string and change it to a friendly unit
   #
   #   string - string to be parsed
@@ -45,7 +61,6 @@ class Unit
         '%'
       else
         null
-
 
 if (typeof module != 'undefined' && typeof module.exports != 'undefined')
   module.exports =

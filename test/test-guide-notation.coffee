@@ -19,7 +19,28 @@ describe 'Gaps', ->
 
 describe 'Units', ->
 
-  it 'can get the preferred name for unit strings', ->
+  it 'should returns null if given nothing', ->
+    assert.strictEqual Unit.from(""), null
+    assert.strictEqual Unit.from(), null
+
+  it 'should return a unit object when a unit pair is given', ->
+    assert.deepEqual Unit.from("1px"), {"string":"1px","value":1,"type":"px"}
+
+  it 'should return null when a bad value is given', ->
+    assert.strictEqual Unit.from("foo"), null
+    assert.strictEqual Unit.from("1foo"), null
+
+  it 'should return an integer when one is given', ->
+    assert.deepEqual Unit.from("1"), 1
+
+  it 'should not get the preferred name if nothing is given', ->
+    assert.equal Unit.preferredName(), null
+    assert.equal Unit.preferredName(""), null
+
+  it 'should get preferred name for unit strings', ->
+
+    assert.equal Unit.preferredName(), null
+    assert.equal Unit.preferredName(""), null
 
     for str in ['centimeter', 'centimeters', 'centimetre', 'centimetres', 'cm']
       assert.equal Unit.preferredName(str), "cm"
